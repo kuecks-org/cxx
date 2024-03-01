@@ -801,11 +801,11 @@ fn write_cxx_function_shim<'a>(out: &mut OutFile<'a>, efn: &'a ExternFn) {
         Some(Type::Ref(_)) => write!(out, "&"),
         Some(Type::Str(_)) if !indirect_return => {
             out.builtin.rust_str_repr = true;
-            write!(out, "::rust::impl<::rust::Str>::repr(");
+            write!(out, "::rust::cxxbridge1::impl<::rust::Str>::repr(");
         }
         Some(ty @ Type::SliceRef(_)) if !indirect_return => {
             out.builtin.rust_slice_repr = true;
-            write!(out, "::rust::impl<");
+            write!(out, "::rust::cxxbridge1::impl<");
             write_type(out, ty);
             write!(out, ">::repr(");
         }
@@ -1061,11 +1061,11 @@ fn write_rust_function_shim_impl(
             Type::Ref(_) => write!(out, "*"),
             Type::Str(_) => {
                 out.builtin.rust_str_new_unchecked = true;
-                write!(out, "::rust::impl<::rust::Str>::new_unchecked(");
+                write!(out, "::rust::cxxbridge1::impl<::rust::Str>::new_unchecked(");
             }
             Type::SliceRef(_) => {
                 out.builtin.rust_slice_new = true;
-                write!(out, "::rust::impl<");
+                write!(out, "::rust::cxxbridge1::impl<");
                 write_type(out, ret);
                 write!(out, ">::slice(");
             }
@@ -1123,7 +1123,7 @@ fn write_rust_function_shim_impl(
     if sig.throws {
         out.builtin.rust_error = true;
         writeln!(out, "  if (error$.ptr) {{");
-        writeln!(out, "    throw ::rust::impl<::rust::Error>::error(error$);");
+        writeln!(out, "    throw ::rust::cxxbridge1::impl<::rust::Error>::error(error$);");
         writeln!(out, "  }}");
     }
     if indirect_return {
